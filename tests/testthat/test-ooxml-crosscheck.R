@@ -1,0 +1,63 @@
+test_that("pptx written by officer carries stowed parts and still opens", {
+  skip_on_cran()
+  skip_if_not_installed("officer")
+  p <- officer::read_pptx()
+  p <- officer::add_slide(p, "Title and Content")
+  p <- officer::add_slide(p, "Title and Content")
+  src <- file.path(tempdir(), "officer_src.pptx")
+  print(p, target = src)
+
+  n_before <- nrow(stow_list(src))
+  payload <- file.path(tempdir(), "cross.csv")
+  writeLines(c("u,v", "3,4"), payload)
+  out <- file.path(tempdir(), "officer_out.pptx")
+  suppressMessages(stow(src, payload, out = out))
+  expect_equal(nrow(stow_list(out)), n_before + 1L)
+  expect_identical(ooxml_media_dir(src), "ppt/media")
+  # officer re-parses the modified package without complaint
+  expect_silent(officer::read_pptx(out))
+  expect_true(all(stow_test(out)))
+})
+
+test_that("docx written by officer still opens after stowing", {
+  skip_on_cran()
+  skip_if_not_installed("officer")
+  d <- officer::read_docx()
+  d <- officer::body_add_par(d, "stowaway docx fixture")
+  src <- file.path(tempdir(), "officer_src.docx")
+  print(d, target = src)
+
+  payload <- mk_payload(200, seed = 17)
+  out <- file.path(tempdir(), "officer_out.docx")
+  suppressMessages(stow(src, payload, entries = "word/media/payload.bin", out = out))
+  expect_identical(ooxml_media_dir(src), "word/media")
+  expect_silent(officer::read_docx(out))
+  back <- file.path(tempdir(), "docx_back.bin")
+  suppressMessages(unstow(out, "word/media/payload.bin", out = back))
+  expect_identical(readBin(back, "raw", file.size(back)),
+                   readBin(payload, "raw", file.size(payload)))
+})
+
+test_that("xlsx written by openxlsx still reads after stowing", {
+  skip_on_cran()
+  skip_if_not_installed("openxlsx")
+  src <- file.path(tempdir(), "src.xlsx")
+  openxlsx::write.xlsx(data.frame(a = 1:3, b = c("x", "y", "z")), src)
+  payload <- mk_payload(150, seed = 18)
+  out <- file.path(tempdir(), "out.xlsx")
+  suppressMessages(stow(src, payload, out = out))
+  expect_identical(ooxml_media_dir(src), "xl/media")
+  df <- openxlsx::read.xlsx(out)
+  expect_equal(df$a, 1:3)
+  expect_true(all(stow_test(out)))
+})
+
+test_that("shipped fixture is healthy", {
+  src <- FIXTURE()
+  info <- stow_info(src)
+  expect_identical(info$kind, "pptx")
+  expect_equal(info$n_entries, 42L)
+  expect_identical(info$prefix_bytes, 0L)
+  expect_true(all(stow_test(src)))
+  expect_false(any(stow_list(src)$encrypted))
+})

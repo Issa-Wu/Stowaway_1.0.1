@@ -1,0 +1,8 @@
+.Rproj.user
+.Rhistory
+.Rdata
+.Renviron
+*.Rcheck/
+*.tar.gz
+revdep/
+stowaway_bench/

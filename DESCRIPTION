@@ -1,0 +1,29 @@
+Package: stowaway
+Type: Package
+Title: Stow Files Inside Office Documents and ZIP Containers
+Version: 0.1.0
+Authors@R: person("Zhengyang Wu", email = "wzy-amu@example.com", role = c("aut", "cre"))
+Description: Office documents (.pptx, .docx, .xlsx) and many other everyday
+    formats are ZIP-based OPC containers. stowaway appends, extracts,
+    removes and CRC-verifies arbitrary parts inside such containers using
+    only base R: no external zip utility, no compiled code, no hard
+    dependencies. Newly added parts are unreferenced by any relationship,
+    so PowerPoint, Word, Excel and LibreOffice simply ignore them, and a
+    presentation can carry its own raw data, analysis code or
+    supplementary files as one self-contained capsule. DEFLATE streams
+    and CRC32 digests are harvested from base R's gzip writer, so the
+    whole implementation is pure R.
+License: MIT + file LICENSE
+URL: https://github.com/Issa-Wu/Stowaway_1.0.1
+BugReports: https://github.com/Issa-Wu/Stowaway_1.0.1/issues
+Encoding: UTF-8
+Depends: R (>= 4.0.0)
+Imports: tools
+Suggests:
+    testthat (>= 3.1.0),
+    officer,
+    openxlsx,
+    xml2
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Config/testthat/edition: 3

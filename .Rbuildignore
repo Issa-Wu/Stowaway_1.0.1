@@ -1,0 +1,10 @@
+^\.Rproj\.user$
+^\.Rhistory$
+^\.git$
+^\.github$
+^codecov\.yml$
+^cran-comments\.md$
+^README\.md$
+^tmp_run_tests\.R$
+^scripts$
+^.*\.Rproj$
