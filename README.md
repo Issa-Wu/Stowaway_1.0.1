@@ -1,5 +1,7 @@
 # stowaway — 把文件"夹带"进 Office 文档（纯 base R）
 
+[![R-CMD-check](https://github.com/Issa-Wu/Stowaway_1.0.1/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Issa-Wu/Stowaway_1.0.1/actions/workflows/R-CMD-check.yaml)
+
 `.pptx` / `.docx` / `.xlsx` 本质是 ZIP 容器（OPC 格式）。stowaway 在**不动原档案一个字节**的前提下，
 往容器里追加任意文件、取回、删除、全量 CRC 校验——全程只用 base R，零依赖、零编译代码、零外部 zip 工具。
 
